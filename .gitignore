@@ -1,5 +1,11 @@
-.venv/
+# intellij
 .idea/
-__pycache__/
 *.pyc
 *.pyo
+
+# other
+.env
+.venv/
+__pycache__/
+agents/__pycache__/
+prompts/__pycache__/
