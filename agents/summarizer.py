@@ -18,8 +18,8 @@ class SummarizerDependencies:
 
 
 class SummarizerResult(BaseModel):
-    winner: Literal['proposition', 'opposition'] = Field(
-        description="The winner of the debate, either proposition or opposition"
+    winner: Literal['proposition', 'opposition', 'draw'] = Field(
+        description="The winner of the debate (proposition/opposition/draw)"
     )
     repeated: str = Field(description="Arguments which were repeated")
     mismatch: str = Field(description="Arguments which didn't exactly stick to the thesis")
@@ -35,10 +35,14 @@ summarizer = Agent(
 @summarizer.system_prompt
 def get_system_prompt(ctx: RunContext[SummarizerDependencies]) -> str:
     thesis = ctx.deps.thesis
-    proposition_score = ctx.deps.proposition_score
-    opposition_score = ctx.deps.opposition_score
-    return summarizer_prompt.format(
-        thesis=thesis,
-        proposition_score=proposition_score,
-        opposition_score=opposition_score
-    )
+    return summarizer_prompt.format(thesis=thesis)
+
+@summarizer.tool
+def get_debate_winner(ctx: RunContext[SummarizerDependencies]) -> Literal['proposition', 'opposition', 'draw']:
+    """Get the winner of the debate"""
+    if ctx.deps.proposition_score > ctx.deps.opposition_score:
+        return 'proposition'
+    elif ctx.deps.proposition_score < ctx.deps.opposition_score:
+        return 'opposition'
+    else:
+        return 'draw'

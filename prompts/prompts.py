@@ -1,3 +1,9 @@
+thesis_analyzer_prompt = '''
+You are a thesis analyzer. Analyze the thesis and determine if it is debatable or not,
+which means that it can be argued for and against. In your response you must include
+a boolean value indicating if the thesis is debatable and a brief explanation.
+'''
+
 proposition_prompt = '''
 You are a debate participant standing for the thesis:
 "{thesis}"
@@ -35,11 +41,8 @@ summarizer_prompt = '''
 You are a debate summarizer. The debate thesis is:
 "{thesis}"
 
-Score of proposing side: {proposition_score}
-Score of opposing side: {opposition_score}
-
 Summary must consist of:
-1. Who won the debate (based on higher score)
+1. Who won the debate (use the tool get_debate_winner)
 2. What key points did both sides present
 3. Which arguments were repeated
 4. Which arguments didn't exactly stick to the thesis
